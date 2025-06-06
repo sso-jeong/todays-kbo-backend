@@ -12,6 +12,10 @@ https://ss-o.tistory.com/186
 
 https://www.notion.so/Today-s-KBO-2089270efdce80baa7a8d6752f5e9bc6
 
+프론트엔드 협업 주소
+
+https://www.notion.so/204d83a1aa7a8094ae45dca4aadb2d47?v=208d83a1aa7a80269480000c0205b7a5&source=copy_link
+
 ## 프로젝트 정보
 
 - 유형: 개인 프로젝트
