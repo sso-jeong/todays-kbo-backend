@@ -3,10 +3,14 @@
 수정일 : 2025년 06월 06일
 
 프로젝트 백앤드 깃 주소
+
 https://github.com/sso-jeong/todays-kbo-backend
 
 프로젝트 상세히 보기
+
 https://ss-o.tistory.com/186
+
+https://www.notion.so/Today-s-KBO-2089270efdce80baa7a8d6752f5e9bc6
 
 ## 프로젝트 정보
 
