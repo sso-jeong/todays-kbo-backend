@@ -49,7 +49,8 @@ https://www.notion.so/204d83a1aa7a8094ae45dca4aadb2d47?v=208d83a1aa7a80269480000
   - selenium
 
 ## 시스템 구성도
-![image](https://github.com/user-attachments/assets/50ff2c67-b0b3-43cd-a7ba-27205c68d6e4)
+![image](https://github.com/user-attachments/assets/2495dcc3-4274-494d-b8e7-062700b8bab0)
+
 1. 사용자는 앱에서 팀 정보/경기 결과/게시글 등을 요청
 2. React Native -> /api/v1/... Spring REST API 호출
 3. 경기 데이터는 매일 새벽 크롤링
