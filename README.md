@@ -49,15 +49,51 @@ https://www.notion.so/204d83a1aa7a8094ae45dca4aadb2d47?v=208d83a1aa7a80269480000
   - selenium
 
 ## 시스템 구성도
-![image](https://github.com/user-attachments/assets/2495dcc3-4274-494d-b8e7-062700b8bab0)
+![image](https://github.com/user-attachments/assets/350a0d80-6768-4dc2-88cc-57f9267f570f)
 
-1. 사용자는 앱에서 팀 정보/경기 결과/게시글 등을 요청
-2. React Native -> /api/v1/... Spring REST API 호출
-3. 경기 데이터는 매일 새벽 크롤링
-- 크롤링 모듈에서 Kafka로 메시지 전송
-- Consumer가 DB에 경기/하이라이트 데이터 저장
-4. 알림/썸네일 등은 Kafka 비동기로 처리
-5. 서버는 Cloudtype으로 배포되어 자동 스케줄링 가능
+**사용자 앱 (React Native)**
+
+1. 사용자는 모바일 앱을 통해 REST API로 서버에 요청을 보냄
+
+- 예: `/api/v1/games/today` 요청
+
+**Spring Boot 서버**
+
+1. 클라우드 플랫폼인 **Cloudtype**에 배포되어 있는 Spring Boot 앱이 API 요청을 처리함
+- 주요 기능:
+    - REST API 제공
+    - 정기 크롤링을 위한 **스케줄링 (Spring Batch)**
+    - Kafka 메시지 프로듀서 & 컨슈머 역할 수행
+
+**크롤링 모듈 (내부 포함)**
+
+1. `Selenium`, `BeautifulSoup` 등을 활용해 경기 정보를 크롤링
+2. 매일 **00:00**에 `Spring Batch`가 실행되어 최신 경기 데이터를 수집
+
+**Kafka Producer**
+
+1. 크롤링된 경기 정보를 **Kafka Topic**에 메시지로 전송
+
+**Kafka**
+
+1. 도커 컨테이너로 실행
+
+**Kafka Consumer (Spring Boot 내부)**
+
+1. Spring Boot에 내장된 Kafka Consumer가 메시지를 받아 처리함
+2. 메시지를 받아서 다음 작업을 수행함:
+    - `Game`/`Highlight` 정보 MySQL에 저장
+    - 알림 전송 준비 (썸네일 이미지 처리 포함 가능)
+
+**DB (MySQL)**
+
+1. 사용자, 경기 정보, 커뮤니티 게시물 등의 모든 데이터가 저장됨
+2. `/api/v1/games/today` 같은 API에서 필요한 데이터를 조회함
+
+**배포 플랫폼: Cloudtype**
+
+1. 초기에는 Cloudtype을 사용해 **Spring Boot 서버와 MySQL 컨테이너**를 함께 구성 가능
+2. Kafka는 별도 도커 컨테이너로 로컬 또는 클라우드에서 동작
 
 ## Skills
 ⭐ Java, Spring Boot, Spring Batch, Kafka / RabbitMQ
