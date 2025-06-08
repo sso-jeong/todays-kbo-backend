@@ -2,8 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/todays-kbo-backend.iml" filepath="$PROJECT_DIR$/.idea/todays-kbo-backend.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/todays-kbo-backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/todays-kbo-backend.main.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/todays-kbo-backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/todays-kbo-backend.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/todays-kbo-backend.test.iml" filepath="$PROJECT_DIR$/.idea/modules/todays-kbo-backend.test.iml" />
+>>>>>>> feature/crawler-schedule
     </modules>
   </component>
 </project>
