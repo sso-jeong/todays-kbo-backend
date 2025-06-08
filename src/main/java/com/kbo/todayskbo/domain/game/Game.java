@@ -17,6 +17,8 @@ public class Game {
 
     private LocalDate gameDate;
 
+    private String weekday;
+
     @ManyToOne
     @JoinColumn(name = "homeTeamId")
     private Team homeTeam;
@@ -27,6 +29,8 @@ public class Game {
 
     private Integer homeScore;
     private Integer awayScore;
+
+    private String stadium;
 
     private String status;
     private String inningStatus;
