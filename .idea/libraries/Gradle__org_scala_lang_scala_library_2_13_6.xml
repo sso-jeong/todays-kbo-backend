@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: org.scala-lang:scala-library:2.13.6" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.scala-lang" artifactId="scala-library" version="2.13.6" baseVersion="2.13.6" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-library/2.13.6/ed7a2f528c7389ea65746c22a01031613d98ab3d/scala-library-2.13.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

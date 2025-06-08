@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: com.typesafe.scala-logging:scala-logging_2.13:3.9.3" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="com.typesafe.scala-logging" artifactId="scala-logging_2.13" version="3.9.3" baseVersion="3.9.3" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.typesafe.scala-logging/scala-logging_2.13/3.9.3/d97c3bcdcf6179e110af8ad2a64ca276843395c1/scala-logging_2.13-3.9.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
