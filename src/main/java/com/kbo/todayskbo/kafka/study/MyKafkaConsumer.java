@@ -1,4 +1,4 @@
-package com.kbo.todayskbo.kafka;
+package com.kbo.todayskbo.kafka.study;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
