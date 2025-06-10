@@ -120,4 +120,4 @@ def crawl_schedule_by_date(date_str: str):
 
 # === 실행 ===
 if __name__ == "__main__":
-    crawl_schedule_by_date("2025-06-08")
+    crawl_schedule_by_date("2025-06-07")

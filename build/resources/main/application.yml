@@ -11,7 +11,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
       naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
     properties:
@@ -20,8 +20,10 @@ spring:
   kafka:
     bootstrap-servers: localhost:9094
     consumer:
-      group-id: test-group-v2
+      group-id: game-consumer-group
       auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: '*'
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     producer:
