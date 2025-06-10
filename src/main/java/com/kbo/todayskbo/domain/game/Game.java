@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Builder
 public class Game {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private Long id;
 
     private LocalDate gameDate;

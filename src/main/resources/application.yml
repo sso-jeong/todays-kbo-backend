@@ -20,7 +20,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9094
     consumer:
-      group-id: game-consumer-group
+      group-id: game-inning-scores-consumer-group
       auto-offset-reset: earliest
       properties:
         spring.json.trusted.packages: '*'
