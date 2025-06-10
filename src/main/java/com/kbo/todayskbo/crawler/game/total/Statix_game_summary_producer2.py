@@ -223,6 +223,6 @@ def crawl_for_year(year):
 
 # ✅ 진짜 실행부 — 병렬만 실행!
 if __name__ == "__main__":
-    years = list(range(2024, 2025))
+    years = list(range(2000, 2025))
     with Pool(processes=3) as pool:
         pool.map(crawl_for_year, years)

@@ -5,21 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9721dc8b-4391-4b9f-9533-e650704b1fc5" name="Changes" comment="feat: Kafka consumer 연동 및 크롤링 데이터 저장 기능 추가">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/game/StatizCrawler_game_score.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/game/game_summary_crawler.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/game/total/Statix_game_summary_producer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/game/total/StatizCrawler_all_game_score.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/todays-kbo-backend.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/todays-kbo-backend.main.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/game/total/Statix_game_summary_producer2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/StatizCrawler.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/study/StatizCrawler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/StatizCrawler_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/study/StatizCrawler_day.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/StatizCrawler_kafka.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/game/StatizCrawler_kafka.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/kafka/KafkaTestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/kafka/study/KafkaTestController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/kafka/MyKafkaConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/kafka/study/MyKafkaConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/kafka/MyKafkaProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/kafka/study/MyKafkaProducer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/game/total/Statix_game_summary_producer.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/game/total/Statix_game_summary_producer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,12 +48,12 @@
     &quot;assignee&quot;: &quot;sso-jeong&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/sso-jeong/todays-kbo-backend.git&quot;,
-    &quot;accountId&quot;: &quot;0e8370c5-61c8-4150-b15d-1c80dd750ab8&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:sso-jeong/todays-kbo-backend.git",
+    "accountId": "0e8370c5-61c8-4150-b15d-1c80dd750ab8"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -74,35 +62,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Gradle.todays-kbo-backend [:com.kbo.todayskbo.TodaysKboBackendApplication.main()].executor": "Run",
-    "Python.GameCrawler.executor": "Run",
-    "Python.StatizCrawler.executor": "Run",
-    "Python.StatizCrawler_day.executor": "Run",
-    "Python.StatizCrawler_kafka.executor": "Run",
-    "Python.Test.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Merging develop",
-    "last_opened_file_path": "/Users/sojeong/spring/todays-kbo-backend/src/main/java/com/kbo/todayskbo/crawler",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.24022989",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Gradle.todays-kbo-backend [:com.kbo.todayskbo.TodaysKboBackendApplication.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Python.GameCrawler.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Statix_game_summary_producer.executor&quot;: &quot;Run&quot;,
+    &quot;Python.StatizCrawler.executor&quot;: &quot;Run&quot;,
+    &quot;Python.StatizCrawler_day.executor&quot;: &quot;Run&quot;,
+    &quot;Python.StatizCrawler_kafka.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Test.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/sojeong/spring/todays-kbo-backend/src/main/java/com/kbo/todayskbo/crawler/game/total&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.24022989&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/game/total" />
       <recent name="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/docs" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.StatizCrawler_kafka">
+  <component name="RunManager" selected="Python.Statix_game_summary_producer">
     <configuration name="TodaysKboBackendApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.kbo.todayskbo.TodaysKboBackendApplication" />
       <module name="todays-kbo-backend.main" />
@@ -115,6 +105,28 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="Statix_game_summary_producer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="todays-kbo-backend.main" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/game/total" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main/java/com/kbo/todayskbo/crawler/game/total/Statix_game_summary_producer.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
     <configuration name="StatizCrawler" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="todays-kbo-backend.main" />
@@ -184,6 +196,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Statix_game_summary_producer" />
         <item itemvalue="Python.StatizCrawler_kafka" />
         <item itemvalue="Python.StatizCrawler_day" />
         <item itemvalue="Python.StatizCrawler" />
