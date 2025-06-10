@@ -1,4 +1,4 @@
-package com.kbo.todayskbo.kafka;
+package com.kbo.todayskbo.kafka.study;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
