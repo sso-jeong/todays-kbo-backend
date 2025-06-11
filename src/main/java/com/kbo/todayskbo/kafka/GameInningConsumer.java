@@ -1,16 +1,16 @@
 package com.kbo.todayskbo.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kbo.todayskbo.domain.game.Game;
-import com.kbo.todayskbo.domain.game.GameInningScore;
-import  com.kbo.todayskbo.domain.game.crawler.GameKafkaMessage;
+import com.kbo.todayskbo.domain.game.*;
+import com.kbo.todayskbo.domain.game.crawler.GameKafkaMessage;
 import com.kbo.todayskbo.domain.team.Team;
-import com.kbo.todayskbo.repository.game.GameInningScoreRepository;
-import com.kbo.todayskbo.repository.game.GameRepository;
+import com.kbo.todayskbo.repository.game.*;
 import com.kbo.todayskbo.repository.team.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -20,67 +20,166 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GameInningConsumer {
 
-    //game-inning-scores
-    // gameId, teamName, inning, runs, awayTeamName, homeTeamName
     private final GameRepository gameRepository;
+    private final GameHighlightPlayRepository gameHighlightPlayRepository;
     private final GameInningScoreRepository gameInningScoreRepository;
+    private final GamePitcherResultRepository gamePitcherResultRepository;
+    private final GameScheduleRepository gameScheduleRepository;
+    private final GameTotalStatRepository gameTotalStatRepository;
+    private final GameWpaPlayerRepository gameWpaPlayerRepository;
+    private final HighlightRepository highlightRepository;
     private final TeamRepository teamRepository;
     private final ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "game-inning-scores", groupId = "game-inning-scores-consumer-group")
-    public void scoresConsume(String message) {
+    @KafkaListener(
+            topics = {"game-result-meta", "game-inning-scores", "game-total-stats" },
+            groupId = "game-data-consumer-group-replay"
+    )
+    public void scoresConsume(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         try {
+            log.info("✅ 받은 메시지 ({}): {}", topic, message);
+
             GameKafkaMessage gameMessage = objectMapper.readValue(message, GameKafkaMessage.class);
+
+            log.info("🏟️ 경기 정보: homeScore={}, awayScore={}, status={}",
+                    gameMessage.getHomeScore(), gameMessage.getAwayScore(), gameMessage.getStatus());
 
             Long gameId = gameMessage.getGameId();
 
-            // 팀 조회 또는 생성
-            Team home = findOrCreateTeam(gameMessage.getHomeTeamName());
-            Team away = findOrCreateTeam(gameMessage.getAwayTeamName());
+            String homeTeamName = gameMessage.getHomeTeamName();
+            String awayTeamName = gameMessage.getAwayTeamName();
 
-            // 이미 저장된 경기인지 확인
-            Optional<Game> existing = gameRepository.findById(gameId);
-          //  Optional<Game> existing2 = gameRepository.findByStatus(gameId);
+            if (homeTeamName == null || awayTeamName == null) {
+                log.error("❌ 메시지에서 팀명이 누락됨: {}", message);
+                return; // 혹은 throw
+            }
 
-// 추가 비교할거 필요함
-            if (existing.isPresent() ) {
-                log.info("⚠️ 이미 저장된 경기: {}", existing.get());
+            Team home = findOrCreateTeam(homeTeamName);
+            Team away = findOrCreateTeam(awayTeamName);
+
+
+            Game game = gameRepository.findById(gameId).orElse(null);
+
+            log.info("📦 파싱된 메시지 gameId: {}", gameMessage.getGameId());
+            if (gameMessage.getGameId() == null) {
+                log.error("❌ gameId가 null입니다. 메시지: {}", message);
                 return;
             }
-            // Game 테이블: 없으면 생성
-            Game game = gameRepository.findById(gameId)
-                    .orElseGet(() -> gameRepository.save(Game.builder()
+            /*
+
+            if (game == null) {
+                game = Game.builder()
+                        .id(gameId)
+                        .gameDate(gameMessage.getGameDate())
+                        .weekday(gameMessage.getWeekday())
+                        .homeTeam(home)
+                        .awayTeam(away)
+                        .homeScore(gameMessage.getHomeScore())
+                        .awayScore(gameMessage.getAwayScore())
+                        .status(gameMessage.getStatus())
+                        .stadium(gameMessage.getStadium())
+                        .build();
+            } else {
+                // 필드 업데이트 (null 값이면 기존 값 유지)
+                if (gameMessage.getGameDate() != null) game.setGameDate(gameMessage.getGameDate());
+                if (gameMessage.getWeekday() != null) game.setWeekday(gameMessage.getWeekday());
+                if (gameMessage.getHomeScore() != null) game.setHomeScore(gameMessage.getHomeScore());
+                if (gameMessage.getAwayScore() != null) game.setAwayScore(gameMessage.getAwayScore());
+                if (gameMessage.getStatus() != null) game.setStatus(gameMessage.getStatus());
+                if (gameMessage.getStadium() != null) game.setStadium(gameMessage.getStadium());
+            }
+            gameRepository.save(game);*/
+
+            if ("game-result-meta".equals(topic)) {
+
+                if (game == null) {
+                    game = Game.builder()
                             .id(gameId)
+                            .gameDate(gameMessage.getGameDate())
+                            .weekday(gameMessage.getWeekday())
                             .homeTeam(home)
                             .awayTeam(away)
-                            .build()));
+                            .homeScore(gameMessage.getHomeScore())
+                            .awayScore(gameMessage.getAwayScore())
+                            .status(gameMessage.getStatus())
+                            .stadium(gameMessage.getStadium())
+                            .build();
+                } else {
+                    // 필드 업데이트 (null 값이면 기존 값 유지)
+                    if (gameMessage.getGameDate() != null) game.setGameDate(gameMessage.getGameDate());
+                    if (gameMessage.getWeekday() != null) game.setWeekday(gameMessage.getWeekday());
+                    if (gameMessage.getHomeScore() != null) game.setHomeScore(gameMessage.getHomeScore());
+                    if (gameMessage.getAwayScore() != null) game.setAwayScore(gameMessage.getAwayScore());
+                    if (gameMessage.getStatus() != null) game.setStatus(gameMessage.getStatus());
+                    if (gameMessage.getStadium() != null) game.setStadium(gameMessage.getStadium());
+                }
+                gameRepository.save(game);
 
-            // GameInningScore 저장
-            GameInningScore score = GameInningScore.builder()
-                    .game(game)
-                    .team(findOrCreateTeam(gameMessage.getTeamName()))
-                    .inning(gameMessage.getInning())
-                    .runs(gameMessage.getRuns())
-                    .build();
+                GameSchedule schedule = GameSchedule.builder()
+                        .gameDate(gameMessage.getGameDate())
+                        .stadium(gameMessage.getStadium())
+                        .homeTeam(home)
+                        .awayTeam(away)
+                        .status(gameMessage.getStatus())
+                        .build();
+                gameScheduleRepository.save(schedule);
 
-            gameInningScoreRepository.save(score);
+                GameWpaPlayer wpaPlayer = GameWpaPlayer.builder()
+                        .game(game)
+                        .team(findOrCreateTeam(gameMessage.getTeamName()))
+                        .build();
+                gameWpaPlayerRepository.save(wpaPlayer);
 
-            log.info("✅ Game 및 GameInningScore 저장 완료: gameId={}", gameId);
-            log.info("✅ Game 저장 완료: {}", game);
+                Highlight highlight = Highlight.builder()
+                        .game(game)
+                        .build();
+                highlightRepository.save(highlight);
 
+                GameHighlightPlay highlightPlay = GameHighlightPlay.builder()
+                        .game(game)
+                        .inning(gameMessage.getInning())
+                        .build();
+                gameHighlightPlayRepository.save(highlightPlay);
+
+                GamePitcherResult pitcherResult = GamePitcherResult.builder()
+                        .game(game)
+                        .build();
+                gamePitcherResultRepository.save(pitcherResult);
+
+            } else if ("game-inning-scores".equals(topic)) {
+                GameInningScore score = GameInningScore.builder()
+                        .game(game)
+                        .team(findOrCreateTeam(gameMessage.getTeamName()))
+                        .inning(gameMessage.getInning())
+                        .runs(gameMessage.getRuns())
+                        .build();
+                gameInningScoreRepository.save(score);
+
+            } else if ("game-total-stats".equals(topic)) {
+                GameTotalStat stat = GameTotalStat.builder()
+                        .game(game)
+                        .team(findOrCreateTeam(gameMessage.getTeamName()))
+                        .statType(gameMessage.getType())
+                        .value(gameMessage.getValue())
+                        .build();
+                gameTotalStatRepository.save(stat);
+
+            } else {
+                log.warn("⚠️ 알 수 없는 토픽: {}", topic);
+            }
+
+            log.info("✅ [{}] 저장 완료: gameId={}", topic, gameId);
         } catch (Exception e) {
-            log.error("❌ Kafka 메시지 처리 실패: {}", message, e);
+            log.error("❌ Kafka 메시지 처리 실패: message={}, topic={}", message, topic, e);
         }
     }
 
-    private Long findTeamIdByName(String name) {
-        return teamRepository.findByName(name)
-                .map(Team::getId)
-                .orElseThrow(() -> new IllegalArgumentException("❌ 존재하지 않는 팀 이름: " + name));
-    }
-
     private Team findOrCreateTeam(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("❌ Team 이름이 null 또는 빈 문자열입니다!");
+        }
         return teamRepository.findByName(name)
                 .orElseGet(() -> teamRepository.save(Team.builder().name(name).build()));
     }
+
 }

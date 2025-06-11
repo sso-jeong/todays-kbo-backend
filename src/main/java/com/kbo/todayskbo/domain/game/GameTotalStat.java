@@ -28,4 +28,10 @@ public class GameTotalStat {
     @JoinColumn(name = "teamId")  // 외래키 이름 명시
     private Team team;
 
+    @Enumerated(EnumType.STRING) // ← enum은 반드시 이걸 명시!
+    private StatType statType;
+
+    private Integer value;
+
+
 }
