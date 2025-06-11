@@ -30,3 +30,8 @@ out/
 
 # === Python 가상환경 ===
 .venv/
+
+.gradle/
+.idea/
+build/
+*.iml

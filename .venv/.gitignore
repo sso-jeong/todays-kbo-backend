@@ -1,0 +1,33 @@
+# created by virtualenv automatically
+# === Java ===
+target/
+*.class
+*.log
+*.jar
+*.war
+*.ear
+
+# === IntelliJ IDEA ===
+.idea/
+!.idea/codeStyles/
+!.idea/inspectionProfiles/
+!.idea/runConfigurations/
+*.iml
+*.ipr
+*.iws
+out/
+.idea/workspace.xml
+.idea/usage.statistics.xml
+.idea/dictionaries
+
+# === Mac 시스템 파일 ===
+.DS_Store
+
+# === 환경 설정 ===
+.env
+*.local
+*.log
+.vscode/
+
+# === Python 가상환경 ===
+.venv/
