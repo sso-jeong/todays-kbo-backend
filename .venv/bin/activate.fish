@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # This file must be used using `source bin/activate.fish` *within a running fish ( http://fishshell.com ) session*.
 # Do not run it directly.
 
@@ -28,10 +29,24 @@ function deactivate -d 'Exit virtualenv mode and return to the normal environmen
 
     if test -n "$_OLD_VIRTUAL_PYTHONHOME"
         set -gx PYTHONHOME "$_OLD_VIRTUAL_PYTHONHOME"
+=======
+# This file must be used with "source <venv>/bin/activate.fish" *from fish*
+# (https://fishshell.com/); you cannot run it directly.
+
+function deactivate  -d "Exit virtual environment and return to normal shell environment"
+    # reset old environment variables
+    if test -n "$_OLD_VIRTUAL_PATH"
+        set -gx PATH $_OLD_VIRTUAL_PATH
+        set -e _OLD_VIRTUAL_PATH
+    end
+    if test -n "$_OLD_VIRTUAL_PYTHONHOME"
+        set -gx PYTHONHOME $_OLD_VIRTUAL_PYTHONHOME
+>>>>>>> feature/crawler-schedule
         set -e _OLD_VIRTUAL_PYTHONHOME
     end
 
     if test -n "$_OLD_FISH_PROMPT_OVERRIDE"
+<<<<<<< HEAD
        and functions -q _old_fish_prompt
         # Set an empty local `$fish_function_path` to allow the removal of `fish_prompt` using `functions -e`.
         set -l fish_function_path
@@ -52,12 +67,25 @@ function deactivate -d 'Exit virtualenv mode and return to the normal environmen
         functions -e deactivate
         functions -e _bashify_path
         functions -e _fishify_path
+=======
+        functions -e fish_prompt
+        set -e _OLD_FISH_PROMPT_OVERRIDE
+        functions -c _old_fish_prompt fish_prompt
+        functions -e _old_fish_prompt
+    end
+
+    set -e VIRTUAL_ENV
+    if test "$argv[1]" != "nondestructive"
+        # Self-destruct!
+        functions -e deactivate
+>>>>>>> feature/crawler-schedule
     end
 end
 
 # Unset irrelevant variables.
 deactivate nondestructive
 
+<<<<<<< HEAD
 set -gx VIRTUAL_ENV /Users/sojeong/spring/todays-kbo-backend/.venv
 
 # https://github.com/fish-shell/fish-shell/issues/436 altered PATH handling
@@ -77,11 +105,20 @@ else
 end
 
 # Unset `$PYTHONHOME` if set.
+=======
+set -gx VIRTUAL_ENV "/Users/sojeong/spring/todays-kbo-backend/.venv"
+
+set -gx _OLD_VIRTUAL_PATH $PATH
+set -gx PATH "$VIRTUAL_ENV/bin" $PATH
+
+# Unset PYTHONHOME if set.
+>>>>>>> feature/crawler-schedule
 if set -q PYTHONHOME
     set -gx _OLD_VIRTUAL_PYTHONHOME $PYTHONHOME
     set -e PYTHONHOME
 end
 
+<<<<<<< HEAD
 function pydoc
     python -m pydoc $argv
 end
@@ -97,6 +134,26 @@ if test -z "$VIRTUAL_ENV_DISABLE_PROMPT"
         printf '(%s) ' $VIRTUAL_ENV_PROMPT
 
         string join -- \n $prompt # handle multi-line prompts
+=======
+if test -z "$VIRTUAL_ENV_DISABLE_PROMPT"
+    # fish uses a function instead of an env var to generate the prompt.
+
+    # Save the current fish_prompt function as the function _old_fish_prompt.
+    functions -c fish_prompt _old_fish_prompt
+
+    # With the original prompt function renamed, we can override with our own.
+    function fish_prompt
+        # Save the return status of the last command.
+        set -l old_status $status
+
+        # Output the venv prompt; color taken from the blue of the Python logo.
+        printf "%s%s%s" (set_color 4B8BBE) "(.venv) " (set_color normal)
+
+        # Restore the return status of the previous command.
+        echo "exit $old_status" | .
+        # Output the original/"old" prompt.
+        _old_fish_prompt
+>>>>>>> feature/crawler-schedule
     end
 
     set -gx _OLD_FISH_PROMPT_OVERRIDE "$VIRTUAL_ENV"

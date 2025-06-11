@@ -1,15 +1,22 @@
 # This file must be used with "source bin/activate.csh" *from csh*.
 # You cannot run it directly.
 # Created by Davide Di Blasi <davidedb@gmail.com>.
+<<<<<<< HEAD
 
 set newline='\
 '
 
 alias deactivate 'test $?_OLD_VIRTUAL_PATH != 0 && setenv PATH "$_OLD_VIRTUAL_PATH:q" && unset _OLD_VIRTUAL_PATH; rehash; test $?_OLD_VIRTUAL_PROMPT != 0 && set prompt="$_OLD_VIRTUAL_PROMPT:q" && unset _OLD_VIRTUAL_PROMPT; unsetenv VIRTUAL_ENV; unsetenv VIRTUAL_ENV_PROMPT; test "\!:*" != "nondestructive" && unalias deactivate && unalias pydoc'
+=======
+# Ported to Python 3.3 venv by Andrew Svetlov <andrew.svetlov@gmail.com>
+
+alias deactivate 'test $?_OLD_VIRTUAL_PATH != 0 && setenv PATH "$_OLD_VIRTUAL_PATH" && unset _OLD_VIRTUAL_PATH; rehash; test $?_OLD_VIRTUAL_PROMPT != 0 && set prompt="$_OLD_VIRTUAL_PROMPT" && unset _OLD_VIRTUAL_PROMPT; unsetenv VIRTUAL_ENV; test "\!:*" != "nondestructive" && unalias deactivate'
+>>>>>>> feature/crawler-schedule
 
 # Unset irrelevant variables.
 deactivate nondestructive
 
+<<<<<<< HEAD
 setenv VIRTUAL_ENV /Users/sojeong/spring/todays-kbo-backend/.venv
 
 set _OLD_VIRTUAL_PATH="$PATH:q"
@@ -50,6 +57,20 @@ endif
 unset env_name
 unset do_prompt
 
+=======
+setenv VIRTUAL_ENV "/Users/sojeong/spring/todays-kbo-backend/.venv"
+
+set _OLD_VIRTUAL_PATH="$PATH"
+setenv PATH "$VIRTUAL_ENV/bin:$PATH"
+
+
+set _OLD_VIRTUAL_PROMPT="$prompt"
+
+if (! "$?VIRTUAL_ENV_DISABLE_PROMPT") then
+    set prompt = "(.venv) $prompt"
+endif
+
+>>>>>>> feature/crawler-schedule
 alias pydoc python -m pydoc
 
 rehash
