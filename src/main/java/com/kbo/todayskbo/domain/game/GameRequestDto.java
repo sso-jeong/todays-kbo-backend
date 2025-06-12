@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class GameRequestDto {
     private LocalDate gameDate;
+    private String weekday;
     private Long homeTeamId;
     private Long awayTeamId;
     private Integer homeScore;
