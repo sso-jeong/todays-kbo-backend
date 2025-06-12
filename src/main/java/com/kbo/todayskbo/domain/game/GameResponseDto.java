@@ -12,11 +12,13 @@ import java.time.LocalDate;
 public class GameResponseDto {
     private Long id;
     private LocalDate gameDate;
+    private String weekday;
     private String homeTeamName;
     private String awayTeamName;
     private Integer homeScore;
     private Integer awayScore;
     private String status;
+    private String stadium;
     private String inningStatus;
     private String highlightUrl;
 }
