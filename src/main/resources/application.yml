@@ -30,3 +30,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
+youtube:
+  api:
+    key: AIzaSyBj2RuB3sG5fRO6xMGG7PTqz_yM8YGEIIQ
+  keywordSuffix: "KBO 하이라이트"
