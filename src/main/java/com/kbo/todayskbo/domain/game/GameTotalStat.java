@@ -1,7 +1,7 @@
 package com.kbo.todayskbo.domain.game;
 
 import com.kbo.todayskbo.domain.team.Team;
-import com.kbo.todayskbo.repository.game.GameTotalStatRepository;
+import com.kbo.todayskbo.entity.Game;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
