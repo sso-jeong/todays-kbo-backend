@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-#!/Users/sojeong/spring/todays-kbo-backend/.venv/bin/python
-=======
 #!/Users/sojeong/spring/todays-kbo-backend/.venv/bin/python3
->>>>>>> feature/crawler-schedule
 # -*- coding: utf-8 -*-
 import re
 import sys

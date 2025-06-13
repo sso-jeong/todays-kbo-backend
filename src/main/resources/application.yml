@@ -4,10 +4,15 @@ spring:
   application:
     name: todays-kbo-backend
   datasource:
-    url: jdbc:mysql://localhost:3306/PROJECT_DB
+    url: jdbc:mysql://localhost:3306/todays_kbo
     username: user
     password: user!234
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+#sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
 
   jpa:
     hibernate:
@@ -20,10 +25,8 @@ spring:
   kafka:
     bootstrap-servers: localhost:9094
     consumer:
-      group-id: game-data-consumer-group
+      group-id: todays-kbo-consumer2
       auto-offset-reset: earliest
-      properties:
-        spring.json.trusted.packages: '*'
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     producer:
