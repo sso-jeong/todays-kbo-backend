@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-#game-result-meta
-#- gameId, gameDate, stadium, awayTeamName, homeTeamName, awayScore, homeScore, winner, loser, save
-
-#game-inning-scores
-#- gameId, teamName, inning, runs, awayTeamName, homeTeamName
-
-#game-total-stats
-#- gameId, teamName, type (R/H/E/B), value, awayTeamName, homeTeamName
-
-
-=======
->>>>>>> feature/crawler-schedule
 import logging
 import time
 import random
@@ -87,24 +74,6 @@ def extract_result_players(driver):
     except:
         return None, None, None
 
-<<<<<<< HEAD
-def log_success(game_id, year):
-    with open(f"success_log_{year}.csv", "a", newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow([game_id, datetime.now().isoformat()])
-
-def save_checkpoint(year, i):
-    with open(f"checkpoint_{year}.txt", "w") as f:
-        f.write(str(i))
-
-def load_checkpoint(year):
-    path = f"checkpoint_{year}.txt"
-    return int(open(path).read()) if os.path.exists(path) else 1
-
-def crawl_game_inning_score(s_no, year):
-    url = f"https://statiz.sporki.com/schedule/?m=summary&s_no={s_no}"
-    logging.info(f"📅 크롤링 시작: s_no={s_no}")
-=======
 def determine_status(rows):
     text = " ".join(row.text for row in rows)
     if "콜드" in text:
@@ -119,17 +88,12 @@ def determine_status(rows):
 def crawl_game_inning_score(s_no, year):
     url = f"https://statiz.sporki.com/schedule/?m=summary&s_no={s_no}"
     logging.info(f"🗕️ 크롤링 시작: s_no={s_no}")
->>>>>>> feature/crawler-schedule
 
     options = uc.ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--disable-blink-features=AutomationControlled')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-<<<<<<< HEAD
-
-=======
->>>>>>> feature/crawler-schedule
     driver = uc.Chrome(options=options)
 
     try:
@@ -138,12 +102,8 @@ def crawl_game_inning_score(s_no, year):
         rows = driver.find_elements(By.CSS_SELECTOR, ".table_type03 tbody tr")
         game_date, stadium = extract_game_meta(driver)
 
-<<<<<<< HEAD
-        if not rows and game_date:
-=======
         weekday_str = None
         if game_date:
->>>>>>> feature/crawler-schedule
             game_dt = datetime.strptime(game_date, "%Y-%m-%d").date()
             weekday_str = ["월", "화", "수", "목", "금", "토", "일"][game_dt.weekday()]
 
@@ -157,9 +117,6 @@ def crawl_game_inning_score(s_no, year):
                     "stadium": stadium
                 })
                 return False
-<<<<<<< HEAD
-            return True
-=======
             else:
                 send_to_kafka("game-result-meta", {
                     "gameId": s_no,
@@ -169,17 +126,12 @@ def crawl_game_inning_score(s_no, year):
                     "stadium": stadium
                 })
                 return True
->>>>>>> feature/crawler-schedule
 
         if len(rows) < 2:
             logging.warning(f"❌ 팀 데이터 부족: {s_no}")
             return True
 
         valid_teams, team_scores, team_totals = [], {}, {}
-<<<<<<< HEAD
-
-=======
->>>>>>> feature/crawler-schedule
         for row in rows:
             name, scores, totals = extract_team_data(row)
             if name:
@@ -205,30 +157,18 @@ def crawl_game_inning_score(s_no, year):
         away_score = int(team_totals[away]["R"]) if team_totals[away]["R"].isdigit() else 0
         home_score = int(team_totals[home]["R"]) if team_totals[home]["R"].isdigit() else 0
 
-<<<<<<< HEAD
-        for team in [away_team, home_team]:
-=======
         for team in [away, home]:
->>>>>>> feature/crawler-schedule
             for inning, run in enumerate(team_scores[team], start=1):
                 send_to_kafka("game-inning-scores", {
                     "gameId": game_id,
                     "teamName": team,
                     "inning": inning,
                     "runs": int(run),
-<<<<<<< HEAD
-                    "awayTeamName": away_team,
-                    "homeTeamName": home_team
-                })
-
-        for team in [away_team, home_team]:
-=======
                     "awayTeamName": away,
                     "homeTeamName": home
                 })
 
         for team in [away, home]:
->>>>>>> feature/crawler-schedule
             for key in ['R', 'H', 'E', 'B']:
                 send_to_kafka("game-total-stats", {
                     "gameId": game_id,
@@ -239,10 +179,7 @@ def crawl_game_inning_score(s_no, year):
                     "value": int(team_totals[team][key]) if team_totals[team][key].isdigit() else 0
                 })
 
-<<<<<<< HEAD
-=======
         game_status = determine_status(rows)
->>>>>>> feature/crawler-schedule
         send_to_kafka("game-result-meta", {
             "gameId": game_id,
             "gameDate": game_date,
@@ -254,19 +191,13 @@ def crawl_game_inning_score(s_no, year):
             "homeScore": home_score,
             "winner": winner,
             "loser": loser,
-<<<<<<< HEAD
-            "save": save
-        })
-=======
             "save": save,
             "status": game_status
         })
 
         with open(f"success_log_{year}.csv", "a", newline='') as csvfile:
             csv.writer(csvfile).writerow([game_id, datetime.now().isoformat()])
->>>>>>> feature/crawler-schedule
 
-        log_success(game_id, year)
         return True
     except Exception as e:
         logging.error(f"❌ 예외 발생: s_no={s_no}, error={e}")
@@ -274,9 +205,6 @@ def crawl_game_inning_score(s_no, year):
     finally:
         driver.quit()
 
-<<<<<<< HEAD
-# 연도별 순차 크롤링 함수
-=======
 def load_checkpoint(year):
     path = f"checkpoint_{year}.txt"
     return int(open(path).read()) if os.path.exists(path) else 1
@@ -285,34 +213,11 @@ def save_checkpoint(year, i):
     with open(f"checkpoint_{year}.txt", "w") as f:
         f.write(str(i))
 
->>>>>>> feature/crawler-schedule
 def batch_crawl_until_end(year):
     i = load_checkpoint(year)
     while True:
         s_no = int(f"{year}{str(i).zfill(4)}")
         keep_going = crawl_game_inning_score(s_no, year)
-<<<<<<< HEAD
-
-        if keep_going is False:
-            logging.info(f"✅ 크롤링 종료 조건 도달: s_no={s_no}")
-            break
-
-        save_checkpoint(year, i)
-        sleep_time = random.uniform(1.5, 3.5)
-        logging.info(f"⏱ {sleep_time:.2f}초 대기 후 다음 경기로...")
-        time.sleep(sleep_time)
-        i += 1
-
-# 멀티 프로세스용 함수 (단일 연도 작업자)
-def crawl_for_year(year):
-    batch_crawl_until_end(year)
-
-# ✅ 진짜 실행부 — 병렬만 실행!
-if __name__ == "__main__":
-    years = list(range(2024, 2025))
-    with Pool(processes=3) as pool:
-        pool.map(crawl_for_year, years)
-=======
         if not keep_going:
             logging.info(f"✅ 크롤링 종료: s_no={s_no}")
             break
@@ -331,4 +236,3 @@ if __name__ == "__main__":
     years = [2025]  # ✅ 여기만 이렇게 수정하면 됨
     with Pool(processes=3) as pool:
         pool.map(crawl_for_year, years)
->>>>>>> feature/crawler-schedule
