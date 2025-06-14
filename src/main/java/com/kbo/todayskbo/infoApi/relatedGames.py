@@ -6,7 +6,7 @@ import time
 
 # Kafka 설정
 producer = KafkaProducer(
-    bootstrap_servers=['svc.sel4.cloudtype.app:3079'],
+    bootstrap_servers=['34.64.184.142:9094'],
     #localhost:9094'],
     value_serializer=lambda v: json.dumps(v, ensure_ascii=False).encode('utf-8')
 )
