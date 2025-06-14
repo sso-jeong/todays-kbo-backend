@@ -1,0 +1,1 @@
+web: java -jar build/libs/todays-kbo-backend-0.0.1-SNAPSHOT.jar
