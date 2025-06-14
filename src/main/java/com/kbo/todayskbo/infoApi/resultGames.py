@@ -5,7 +5,8 @@ from datetime import datetime
 
 # Kafka 설정
 producer = KafkaProducer(
-    bootstrap_servers=['localhost:9094'],
+    bootstrap_servers=['svc.sel4.cloudtype.app:3079'],
+    #localhost:9094'],
     value_serializer=lambda v: json.dumps(v, ensure_ascii=False).encode('utf-8')
 )
 
