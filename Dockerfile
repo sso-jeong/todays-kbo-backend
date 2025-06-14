@@ -18,12 +18,12 @@ RUN mkdir -p ${KAFKA_HOME} && \
     tar -xzf /tmp/kafka.tgz --strip=1 -C ${KAFKA_HOME} && \
     rm /tmp/kafka.tgz
 
-# Kafka UI 설치
+
+# Kafka UI 설치 (JAR 파일)
 ENV KAFKA_UI_VERSION=0.7.2
 RUN mkdir -p /opt/kafka-ui && \
-    wget https://github.com/provectus/kafka-ui/releases/download/v${KAFKA_UI_VERSION}/kafka-ui-${KAFKA_UI_VERSION}.zip -O /tmp/kafka-ui.zip && \
-    unzip /tmp/kafka-ui.zip -d /opt/kafka-ui && \
-    rm /tmp/kafka-ui.zip
+    wget https://github.com/provectus/kafka-ui/releases/download/v${KAFKA_UI_VERSION}/kafka-ui-api-v${KAFKA_UI_VERSION}.jar -O /opt/kafka-ui/kafka-ui.jar
+
 
 # 실행 스크립트 추가
 COPY start.sh /start.sh
