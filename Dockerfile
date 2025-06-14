@@ -2,21 +2,30 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# 기본 패키지 설치
+# 필수 패키지 설치
 RUN apt-get update && apt-get install -y \
-    wget curl gnupg openjdk-11-jdk unzip net-tools supervisor
+    wget curl gnupg openjdk-11-jdk unzip net-tools supervisor && \
+    apt-get clean
 
-# Kafka 및 Zookeeper 설치
-RUN mkdir -p /opt/kafka && \
-    wget -qO- https://downloads.apache.org/kafka/3.7.0/kafka_2.13-3.7.0.tgz | tar -xz --strip=1 -C /opt/kafka
+# Kafka 다운로드 URL 미리 정의
+ENV KAFKA_VERSION=3.7.0
+ENV SCALA_VERSION=2.13
+ENV KAFKA_HOME=/opt/kafka
+
+# Kafka 설치 (다운로드 → 파일로 저장 → 압축 해제)
+RUN mkdir -p ${KAFKA_HOME} && \
+    wget https://downloads.apache.org/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz -O /tmp/kafka.tgz && \
+    tar -xzf /tmp/kafka.tgz --strip=1 -C ${KAFKA_HOME} && \
+    rm /tmp/kafka.tgz
 
 # Kafka UI 설치
+ENV KAFKA_UI_VERSION=0.7.2
 RUN mkdir -p /opt/kafka-ui && \
-    wget -q https://github.com/provectus/kafka-ui/releases/download/v0.7.2/kafka-ui-0.7.2.zip && \
-    unzip kafka-ui-0.7.2.zip -d /opt/kafka-ui && \
-    rm kafka-ui-0.7.2.zip
+    wget https://github.com/provectus/kafka-ui/releases/download/v${KAFKA_UI_VERSION}/kafka-ui-${KAFKA_UI_VERSION}.zip -O /tmp/kafka-ui.zip && \
+    unzip /tmp/kafka-ui.zip -d /opt/kafka-ui && \
+    rm /tmp/kafka-ui.zip
 
-# 설정 파일 및 실행 스크립트 복사
+# 실행 스크립트 추가
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
