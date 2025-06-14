@@ -2,6 +2,7 @@ package com.kbo.todayskbo.service;
 
 
 import com.kbo.todayskbo.dto.GameDto;
+import com.kbo.todayskbo.dto.GameDtoResponse;
 import com.kbo.todayskbo.entity.Game;
 import com.kbo.todayskbo.entity.InningScore;
 import com.kbo.todayskbo.entity.GameRheb;
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,6 +40,7 @@ public class GameService {
                 .gameDateTime(dto.getGameDateTime())
                 .stadium(dto.getStadium())
                 .winner(dto.getWinner())
+                .statusLabel(dto.getStatusLabel())
                 .cancel(dto.isCancel())
                 .homeTeamCode(dto.getHomeTeamCode())
                 .homeTeamName(dto.getHomeTeamName())
@@ -49,6 +50,13 @@ public class GameService {
                 .awayTeamScore(dto.getAwayTeamScore())
                 .statusCode(dto.getStatusCode())
                 .statusInfo(dto.getStatusInfo())
+                /*
+                "BEFORE".equals(game.getStatusCode()) && game.isCancel() ? "취소" :
+                "BEFORE".equals(game.getStatusCode()) && !game.isCancel() &&
+                                game.getStatusInfo() != null && game.getStatusInfo().contains("회") ? "진행중" :
+                "BEFORE".equals(game.getStatusCode()) && !game.isCancel() ? "예정" :
+                "RESULT".equals(game.getStatusCode()) ? "종료" : "-"*/
+
                 .homeStarterName(dto.getHomeStarterName())
                 .awayStarterName(dto.getAwayStarterName())
                 .winPitcherName(dto.getWinPitcherName())
@@ -128,28 +136,22 @@ public class GameService {
     }
 
 
-    public List<GameDto> getGamesByDate(LocalDate date) {
-        List<Game> games = gameRepository.findByGameDate(date);
+    public List<GameDtoResponse> getGamesByDate(LocalDate gameDate) {
+        List<GameDtoResponse> games = gameRepository.findByGameDate(gameDate);
 
         return games.stream()
-                .map(game -> GameDto.builder()
+                .map(game -> GameDtoResponse.builder()
                         .gameId(game.getGameId())
                         .gameDate(game.getGameDate())
                         .weekday(game.getWeekday())
+                        .stadium(game.getStadium())
                         .homeTeamScore(game.getHomeTeamScore())
                         .awayTeamScore(game.getAwayTeamScore())
                         .homeTeamName(game.getHomeTeamName())
                         .awayTeamName(game.getAwayTeamName())
-                        .winner(
-                                "HOME".equals(game.getWinner()) ? "승" :
-                                        "AWAY".equals(game.getWinner()) ? "패" : "-"
-                        )
+                        .winner(game.getWinner())
+                        .statusLabel(game.getStatusLabel())
                         .winPitcherName(game.getWinPitcherName())
-                        .statusCode(
-                                "RESULT".equals(game.getStatusCode()) ? "종료" :
-                                        "BEFORE".equals(game.getWinner()) ? "경기취소" : "-"
-
-                        )
                         .losePitcherName(game.getLosePitcherName())
                         .build())
                 .collect(Collectors.toList());

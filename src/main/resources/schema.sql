@@ -36,7 +36,8 @@ CREATE TABLE game (
     awayCurrentPitcherName VARCHAR(50),
 
     stadiumBroadcastChannel VARCHAR(50),
-    weekday VARCHAR(10)
+    weekday VARCHAR(10),
+    statusLabel VARCHAR(20)
 );
 
 CREATE TABLE InningScore (

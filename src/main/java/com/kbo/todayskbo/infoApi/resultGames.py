@@ -11,7 +11,20 @@ producer = KafkaProducer(
 
 # 날짜 설정
 FROM_DATE = "2025-03-22"
-TO_DATE = "2025-06-13"
+TO_DATE = "2025-08-31"
+
+def determine_status_label(game: dict) -> str:
+    if game.get("cancel"):
+        return "취소"
+    elif game.get("statusCode") == "RESULT":
+        return "종료"
+    elif game.get("statusCode") == "BEFORE":
+        status_info = game.get("statusInfo", "")
+        if status_info and "회" in status_info:
+            return "진행중"
+        else:
+            return "예정"
+    return "-"
 
 def get_weekday(date_str):
     try:
@@ -69,6 +82,7 @@ if __name__ == "__main__":
         payload = {
             **game,
             "weekday": get_weekday(game.get("gameDate", "")),
+            "statusLabel": determine_status_label(game),
 
             # 👇 안전하게 숫자로 변환
             "homeTeamScore": safe_int(game.get("homeTeamScore")),

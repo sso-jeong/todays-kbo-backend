@@ -8,11 +8,13 @@ spring:
     username: user
     password: user!234
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jackson:
+    default-property-inclusion: non_null
 
 #sql:
-    init:
-      mode: always
-      schema-locations: classpath:schema.sql
+#    init:
+#      mode: always
+#      schema-locations: classpath:schema.sql
 
   jpa:
     hibernate:

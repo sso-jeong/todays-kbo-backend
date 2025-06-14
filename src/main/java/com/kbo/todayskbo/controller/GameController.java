@@ -2,6 +2,7 @@ package com.kbo.todayskbo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kbo.todayskbo.dto.GameDto;
+import com.kbo.todayskbo.dto.GameDtoResponse;
 import com.kbo.todayskbo.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,7 @@ public class GameController {
     }
 
     @GetMapping("/{gameDate}")
-    public ResponseEntity<List<GameDto>> getGames(@PathVariable String gameDate) {
+    public ResponseEntity<List<GameDtoResponse>> getGames(@PathVariable String gameDate) {
         LocalDate parsedDate = LocalDate.parse(gameDate);
         return ResponseEntity.ok(gameService.getGamesByDate(parsedDate));
     }

@@ -34,6 +34,7 @@ public class Game {
     private String awayTeamName;
     private Integer awayTeamScore;
 
+    private String statusLabel;
     private String winner;
     private String statusCode;
     private String statusInfo;
