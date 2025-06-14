@@ -25,7 +25,8 @@ spring:
       hibernate:
         format_sql: true
   kafka:
-    bootstrap-servers: 34.64.184.142:9094
+    bootstrap-servers: svc.sel4.cloudtype.app:3079
+    #34.64.184.142:9094
     consumer:
       group-id: todays-kbo-consumer2
       auto-offset-reset: earliest
