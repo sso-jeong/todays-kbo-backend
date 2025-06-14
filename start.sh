@@ -8,11 +8,3 @@ echo "✅ Starting Zookeeper..."
 sleep 5
 echo "✅ Starting Kafka..."
 /opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties > /tmp/kafka.log 2>&1 &
-
-# Kafka UI 실행
-sleep 10
-echo "✅ Starting Kafka UI..."
-java -jar /opt/kafka-ui/kafka-ui-api.jar &
-
-# 대기 (컨테이너가 죽지 않도록)
-tail -f /tmp/kafka-ui.log
