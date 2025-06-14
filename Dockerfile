@@ -7,14 +7,14 @@ RUN apt-get update && apt-get install -y \
     wget curl gnupg openjdk-11-jdk unzip net-tools supervisor && \
     apt-get clean
 
-# Kafka 다운로드 URL 미리 정의
+# Kafka 다운로드 설정
 ENV KAFKA_VERSION=3.7.0
 ENV SCALA_VERSION=2.13
 ENV KAFKA_HOME=/opt/kafka
 
-# Kafka 설치 (다운로드 → 파일로 저장 → 압축 해제)
+# ✅ Kafka 설치 (아카이브에서 다운로드)
 RUN mkdir -p ${KAFKA_HOME} && \
-    wget https://downloads.apache.org/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz -O /tmp/kafka.tgz && \
+    wget https://archive.apache.org/dist/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz -O /tmp/kafka.tgz && \
     tar -xzf /tmp/kafka.tgz --strip=1 -C ${KAFKA_HOME} && \
     rm /tmp/kafka.tgz
 
