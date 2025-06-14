@@ -4,17 +4,17 @@ spring:
   application:
     name: todays-kbo-backend
   datasource:
-    url: jdbc:mysql://localhost:3306/todays_kbo
+    url: jdbc:mysql://svc.sel4.cloudtype.app:31363/todays_kbo
     username: user
     password: user!234
     driver-class-name: com.mysql.cj.jdbc.Driver
   jackson:
     default-property-inclusion: non_null
 
-#sql:
-#    init:
-#      mode: always
-#      schema-locations: classpath:schema.sql
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
 
   jpa:
     hibernate:
