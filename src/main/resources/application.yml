@@ -11,10 +11,10 @@ spring:
   jackson:
     default-property-inclusion: non_null
 
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:schema.sql
+#  sql:
+#    init:
+#      mode: always
+#      schema-locations: classpath:schema.sql
 
   jpa:
     hibernate:
