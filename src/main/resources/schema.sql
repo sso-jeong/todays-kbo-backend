@@ -1,6 +1,6 @@
 
 
-CREATE TABLE game (
+CREATE TABLE Game (
     gameId VARCHAR(50) PRIMARY KEY,
     categoryId VARCHAR(50),
     categoryName VARCHAR(50),
@@ -48,7 +48,8 @@ CREATE TABLE InningScore (
     awayScore INT
 
 );
-CREATE TABLE gameRheb (
+
+CREATE TABLE GameRheb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     gameId VARCHAR(20),
     teamCode VARCHAR(10),
@@ -57,4 +58,15 @@ CREATE TABLE gameRheb (
     hit INT,
     error INT,
     baseOnBall INT
+);
+
+
+CREATE TABLE GameRecord (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    gameId VARCHAR(50) NOT NULL,
+    etcRecordsJson TEXT,
+    pitchingResultJson TEXT,
+    teamPitchingBoxscoreJson TEXT,
+    battersBoxscoreJson TEXT,
+    scoreBoardJson TEXT
 );

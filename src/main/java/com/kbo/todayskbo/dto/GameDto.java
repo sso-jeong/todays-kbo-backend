@@ -95,6 +95,12 @@ public class GameDto {
         private GameCenterUrl gameCenterUrl;
         private CommentInfo commentInfo;
 
+        private List<EtcRecord> etcRecords;
+        private List<PitchingResult> pitchingResult;
+        private TeamPitchingBoxscore teamPitchingBoxscore;
+        private BattersBoxscore battersBoxscore;
+        private ScoreBoard scoreBoard;
+
         // 내부 클래스들
         @Data
         public static class GameCenterUrl {
@@ -115,6 +121,84 @@ public class GameDto {
                 public static class Expose {
                         private boolean state;
                         private LocalDateTime endDateTime;
+                }
+        }
+
+        @Data
+        public static class EtcRecord {
+                private String result;
+                private String how;
+        }
+
+        @Data
+        public static class PitchingResult {
+                private int s;
+                private String pCode;
+                private int w;
+                private String name;
+                private int l;
+                private String wls;
+        }
+
+        @Data
+        public static class TeamPitchingBoxscore {
+                private PitchingStats away;
+                private PitchingStats home;
+
+                @Data
+                public static class PitchingStats {
+                        private int kk;
+                        private int pa;
+                        private int ab;
+                        private int hit;
+                        private int r;
+                        private int bf;
+                        private int bbhp;
+                        private String inn;
+                        private int hr;
+                        private int er;
+                }
+        }
+
+        @Data
+        public static class BattersBoxscore {
+                private TotalStats homeTotal;
+                private TotalStats awayTotal;
+
+                @Data
+                public static class TotalStats {
+                        private int ab;
+                        private int hit;
+                        private String hra;
+                        private int rbi;
+                        private int run;
+                        private int sb;
+                }
+        }
+
+        @Data
+        public static class ScoreBoard {
+                private RHEB rheb;
+                private Innings inn;
+
+                @Data
+                public static class RHEB {
+                        private TeamScore away;
+                        private TeamScore home;
+
+                        @Data
+                        public static class TeamScore {
+                                private int r;
+                                private int b;
+                                private int e;
+                                private int h;
+                        }
+                }
+
+                @Data
+                public static class Innings {
+                        private List<Integer> away;
+                        private List<Integer> home;
                 }
         }
 }

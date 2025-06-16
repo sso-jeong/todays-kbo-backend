@@ -2,17 +2,34 @@ import requests
 import json
 from kafka import KafkaProducer
 from datetime import datetime
+import os
 
 # Kafka 설정
 producer = KafkaProducer(
-    bootstrap_servers=['34.64.184.142:9094'],
-    #localhost:9094'],
+    bootstrap_servers=['svc.sel4.cloudtype.app:31375'],
     value_serializer=lambda v: json.dumps(v, ensure_ascii=False).encode('utf-8')
 )
+
+# 전송 로그 파일
+SENT_LOG_FILE = "sent_game_ids_meta.txt"
 
 # 날짜 설정
 FROM_DATE = "2025-03-22"
 TO_DATE = "2025-08-31"
+
+# 전송된 gameId 목록 불러오기
+def load_sent_ids():
+    if not os.path.exists(SENT_LOG_FILE):
+        return set()
+    with open(SENT_LOG_FILE, "r") as f:
+        return set(line.strip() for line in f.readlines())
+
+# 전송된 gameId 기록
+def save_sent_id(game_id):
+    with open(SENT_LOG_FILE, "a") as f:
+        f.write(f"{game_id}\n")
+
+sent_game_ids = load_sent_ids()
 
 def determine_status_label(game: dict) -> str:
     if game.get("cancel"):
@@ -34,7 +51,6 @@ def get_weekday(date_str):
     except:
         return None
 
-# 🔧 "-" 등 잘못된 값을 안전하게 변환하는 함수
 def safe_int(value):
     try:
         return int(value)
@@ -47,9 +63,16 @@ def safe_int_list(value_list):
     return [safe_int(v) for v in value_list]
 
 def send_to_kafka(topic, data):
+    game_id = data.get("gameId")
+    if game_id in sent_game_ids:
+        print(f"⏩ 중복 건너뜀 [{topic}] | gameId={game_id}")
+        return
     try:
         producer.send(topic, value=data)
-        print(f"📤 Kafka 전송 완료 [{topic}]: {data['gameId']}")
+        producer.flush()
+        print(f"📤 Kafka 전송 완료 [{topic}]: {game_id}")
+        save_sent_id(game_id)
+        sent_game_ids.add(game_id)
     except Exception as e:
         print(f"❌ Kafka 전송 실패: {e}")
 
@@ -80,12 +103,14 @@ if __name__ == "__main__":
     games = fetch_games(FROM_DATE, TO_DATE)
 
     for game in games:
+        game_id = game.get("gameId")
+        if not game_id:
+            continue
+
         payload = {
             **game,
             "weekday": get_weekday(game.get("gameDate", "")),
             "statusLabel": determine_status_label(game),
-
-            # 👇 안전하게 숫자로 변환
             "homeTeamScore": safe_int(game.get("homeTeamScore")),
             "awayTeamScore": safe_int(game.get("awayTeamScore")),
             "homeTeamScoreByInning": safe_int_list(game.get("homeTeamScoreByInning")),
@@ -94,7 +119,5 @@ if __name__ == "__main__":
             "awayTeamRheb": safe_int_list(game.get("awayTeamRheb")),
         }
 
-        print(f"{payload['gameId']} | {payload['gameDate']} | {payload['awayTeamName']} {payload['awayTeamScore']} : {payload['homeTeamScore']} {payload['homeTeamName']}")
+        print(f"{game_id} | {payload['gameDate']} | {payload['awayTeamName']} {payload['awayTeamScore']} : {payload['homeTeamScore']} {payload['homeTeamName']}")
         send_to_kafka("game-result-meta2", payload)
-
-    producer.flush()

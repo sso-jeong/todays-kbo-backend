@@ -1,17 +1,16 @@
 package com.kbo.todayskbo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kbo.todayskbo.dto.GameDto;
-import com.kbo.todayskbo.dto.GameDtoResponse;
+import com.kbo.todayskbo.dto.*;
 import com.kbo.todayskbo.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -50,28 +49,36 @@ public class GameController {
         }
     }
 
+    @KafkaListener(topics = "game-records", groupId = "kbo-consumer")
+    public void listRecords(String message) {
+        try {
+            GameDto dto = objectMapper.readValue(message, GameDto.class);
+            gameService.saveRecord(dto);
+        } catch (Exception e) {
+            System.err.println("❌ related-games Kafka 메시지 처리 실패: " + e.getMessage());
+            e.printStackTrace();  // 🔥 상세 에러 로그 출력
+        }
+    }
+
     @GetMapping("/{gameDate}")
     public ResponseEntity<List<GameDtoResponse>> getGames(@PathVariable String gameDate) {
         LocalDate parsedDate = LocalDate.parse(gameDate);
         return ResponseEntity.ok(gameService.getGamesByDate(parsedDate));
     }
 
-    /*
-    @GetMapping("/detail/{gameId}")
-    public ResponseEntity<GameDto> getGameDetail(@PathVariable Long gameId) {
-        return ResponseEntity.ok(gameService.getGameDetail(gameId));
-    }*/
-}
+    @GetMapping("/innings")
+    public ResponseEntity<GameInningScoreResponse> getInningScore(@RequestParam("gameId") String gameId) {
+        return ResponseEntity.ok(gameService.getGameInningById(gameId));
+    }
 
-/*
-@GetMapping("/{gameDate}")
-public ResponseEntity<List<GameResponseDto>> getGames(@PathVariable String gameDate) {
-    LocalDate parsedDate = LocalDate.parse(gameDate);
-    return ResponseEntity.ok(gameService.getGamesByDate(parsedDate));
-}
+    @GetMapping("/rheb")
+    public ResponseEntity<List<GameRhebResponse>> getGameRhebById(@RequestParam("gameId") String gameId) {
+        return ResponseEntity.ok(gameService.getGameRhebById(gameId));
+    }
 
-@GetMapping("/detail/{gameId}")
-public ResponseEntity<GameDetailDto> getGameDetail(@PathVariable Long gameId) {
-    return ResponseEntity.ok(gameService.getGameDetail(gameId));
+    @GetMapping("/record")
+    public GameRecordResponse getGameRecord(@RequestParam("gameId") String gameId) {
+        return gameService.findByGameId(gameId);
+    }
+
 }
-*/

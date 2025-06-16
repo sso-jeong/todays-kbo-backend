@@ -1,11 +1,14 @@
 package com.kbo.todayskbo.service;
 
 
-import com.kbo.todayskbo.dto.GameDto;
-import com.kbo.todayskbo.dto.GameDtoResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kbo.todayskbo.dto.*;
 import com.kbo.todayskbo.entity.Game;
+import com.kbo.todayskbo.entity.GameRecord;
 import com.kbo.todayskbo.entity.InningScore;
 import com.kbo.todayskbo.entity.GameRheb;
+import com.kbo.todayskbo.repository.GameRecordRepository;
 import com.kbo.todayskbo.repository.GameRepository;
 import com.kbo.todayskbo.repository.GameInningScoreRepository;
 import com.kbo.todayskbo.repository.GameRhebRepository;
@@ -17,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -27,7 +31,12 @@ public class GameService {
     private final GameRepository gameRepository;
     private final GameInningScoreRepository inningScoreRepository;
     private final GameRhebRepository rhebRepository;
+    private final GameRecordRepository repository;
+    private final ObjectMapper objectMapper;
 
+    // ########################
+    // kafka start
+    // ########################
     @Transactional
     public void saveGame(GameDto dto) {
         log.error("service start");
@@ -110,8 +119,6 @@ public class GameService {
 
         }
 
-
-
         GameRheb homeRheb = GameRheb.builder()
                 .gameId(dto.getGameId())
                 .teamCode(dto.getHomeTeamCode())
@@ -133,7 +140,30 @@ public class GameService {
                 .baseOnBall(dto.getAwayTeamRheb().get(3))
                 .build();
         rhebRepository.save(awayRheb);
+
     }
+
+    @Transactional
+    public void saveRecord(GameDto dto) {
+        try {
+            GameRecord entity = GameRecord.builder()
+                    .gameId(dto.getGameId())
+                    .etcRecordsJson(objectMapper.writeValueAsString(dto.getEtcRecords()))
+                    .pitchingResultJson(objectMapper.writeValueAsString(dto.getPitchingResult()))
+                    .teamPitchingBoxscoreJson(objectMapper.writeValueAsString(dto.getTeamPitchingBoxscore()))
+                    .battersBoxscoreJson(objectMapper.writeValueAsString(dto.getBattersBoxscore()))
+                    .scoreBoardJson(objectMapper.writeValueAsString(dto.getScoreBoard()))
+                    .build();
+
+            repository.save(entity);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("❌ JSON 직렬화 실패", e);
+        }
+    }
+
+    // ########################
+    // kafka end
+    // ########################
 
 
     public List<GameDtoResponse> getGamesByDate(LocalDate gameDate) {
@@ -153,78 +183,59 @@ public class GameService {
                         .statusLabel(game.getStatusLabel())
                         .winPitcherName(game.getWinPitcherName())
                         .losePitcherName(game.getLosePitcherName())
+                        .homeCurrentPitcherName(game.getHomeCurrentPitcherName())
+                        .awayCurrentPitcherName(game.getAwayCurrentPitcherName())
                         .build())
                 .collect(Collectors.toList());
     }
 
 
+    public GameInningScoreResponse getGameInningById(String gameId) {
 
+        List<InningScore> innings = inningScoreRepository.findByGameIdOrderByInningAsc(gameId);
+
+        List<Integer> homeScores = innings.stream()
+                .map(InningScore::getHomeScore)
+                .collect(Collectors.toList());
+
+        List<Integer> awayScores = innings.stream()
+                .map(InningScore::getAwayScore)
+                .collect(Collectors.toList());
+
+        return GameInningScoreResponse.builder()
+                .gameId(gameId)
+                .homeTeamScoreByInning(homeScores)
+                .awayTeamScoreByInning(awayScores)
+                .build();
+    }
+
+    public List<GameRhebResponse> getGameRhebById(String gameId) {
+
+        List<GameRheb> games = rhebRepository.findByGameId(gameId);
+        return games.stream()
+                .map(game -> GameRhebResponse.builder()
+                        .gameId(game.getGameId())
+                        .run(game.getRun())
+                        .hit(game.getHit())
+                        .error(game.getError())
+                        .baseOnBall(game.getBaseOnBall())
+                        .build())
+                .collect(Collectors.toList());
+
+    }
+
+    public GameRecordResponse findByGameId(String gameId) {
+        GameRecord record = repository.findByGameId(gameId)
+                .orElseThrow(() -> new RuntimeException("❌ GameRecord not found: " + gameId));
+
+        try {
+            return GameRecordResponse.builder()
+                    .etcRecords(objectMapper.readValue(record.getEtcRecordsJson(), List.class))
+                    .teamPitchingBoxscore(objectMapper.readValue(record.getTeamPitchingBoxscoreJson(), Map.class))
+                    .build();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("❌ JSON 역직렬화 실패", e);
+        }
+    }
 
 }
-
-        /*
-        public List<GameResponseDto> getGamesByDate(LocalDate date) {
-            List<Game> games = gameRepository.findByGameDate(date);
-
-            return games.stream()
-                    .map(game -> GameResponseDto.builder()
-                            .id(game.getId())
-                            .gameDate(game.getGameDate())
-                            .weekday(game.getWeekday())
-                            .homeTeamName(game.getHomeTeam().getName())
-                            .awayTeamName(game.getAwayTeam().getName())
-                            .homeScore(game.getHomeScore())
-                            .awayScore(game.getAwayScore())
-                            .status(game.getStatus())
-                            .stadium(game.getStadium())
-                            .build())
-                    .collect(Collectors.toList());
-        }
-
-
-        public GameDetailDto getGameDetail(Long gameId) {
-            List<Map<String, Object>> rows = gameStatRepository.findFullGameDataByGameId(gameId);
-
-            if (rows.isEmpty()) {
-                throw new IllegalArgumentException("해당 gameId에 대한 데이터가 없습니다.");
-            }
-
-            Map<String, Object> firstRow = rows.get(0);
-            GameDetailDto.GameDetailDtoBuilder gameBuilder = GameDetailDto.builder()
-                    .gameId(((Number) firstRow.get("gameId")).longValue())
-                    .gameDate((String) firstRow.get("gameDate"))
-                    .weekday((String) firstRow.get("weekday"))
-                    .status((String) firstRow.get("status"))
-                    .stadium((String) firstRow.get("stadium"))
-                    .homeScore((Integer) firstRow.get("homeScore"))
-                    .awayScore((Integer) firstRow.get("awayScore"))
-                    .homeTeamName((String) firstRow.get("homeTeamName"))
-                    .awayTeamName((String) firstRow.get("awayTeamName"));
-
-            Map<String, TeamDetailDto> teamMap = new LinkedHashMap<>();
-
-            for (Map<String, Object> row : rows) {
-                String teamName = (String) row.get("teamName");
-                String statType = row.get("statType").toString();
-                int statValue = ((Number) row.get("statValue")).intValue();
-                int inning = ((Number) row.get("inning")).intValue();
-                int runs = ((Number) row.get("runs")).intValue();
-
-                TeamDetailDto team = teamMap.computeIfAbsent(teamName, name -> TeamDetailDto.builder()
-                        .teamName(name)
-                        .totalStats(new HashMap<>())
-                        .innings(new ArrayList<>())
-                        .build());
-
-                team.getTotalStats().put(statType, statValue); // statType: R, H, E, B
-
-                // 이닝별 점수는 이닝 번호 기준으로 1번만 넣기
-                boolean alreadyExists = team.getInnings().stream().anyMatch(i -> i.getInning() == inning);
-                if (!alreadyExists) {
-                    team.getInnings().add(InningScoreDto.builder().inning(inning).runs(runs).build());
-                }
-            }
-
-            gameBuilder.teams(new ArrayList<>(teamMap.values()));
-            return gameBuilder.build();
-        }*/
